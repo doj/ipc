@@ -48,7 +48,7 @@ Having obtained a `Session`, the application can open transport channels (and, i
 > const App APP_A{ "a", // Unique name for identification in the system.
 >                  // Basic properties for safety, authentication.
 >                  "/bin/app_a.exec", USER_ID_A, GROUP_ID };
-> const App APP_B{ "b", "/bin/app_a.exec", USER_ID_B, GROUP_ID };
+> const App APP_B{ "b", "/bin/app_b.exec", USER_ID_B, GROUP_ID };
 > // Which app(s) will connect sessions (client) versus accept sessions (server)?
 > const Client_app APP_B_AS_CLI{ APP_B };
 > const Server_app APP_A_AS_SRV{ APP_A,
@@ -316,7 +316,7 @@ All those subleties about different types of pipes in a `Channel` bundle complet
 @anchor api_overview_transport_struc
 Transport (structured)
 ----------------------
-While a `Channel` transports blobs and/or native handles, it is likely the Flow-IPC user will want to be able to transmit schema-based structured data, gaining the benefits of that approach including arbitrary data-structuree complexity and forward/backward-compatibility.  [capnp (Cap'n Proto)](https://capnproto.org) is the best-in-class third-party framework for schema-based structured data; ipc::transport's structured layer works by integrating with capnp.
+While a `Channel` transports blobs and/or native handles, it is likely the Flow-IPC user will want to be able to transmit schema-based structured data, gaining the benefits of that approach including arbitrary data-structure complexity and forward/backward-compatibility.  [capnp (Cap'n Proto)](https://capnproto.org) is the best-in-class third-party framework for schema-based structured data; ipc::transport's structured layer works by integrating with capnp.
 
 To deal with structured data instead of mere blobs (though a schema-based structure can, of course, itself store blobs such as images), one simply constructs an ipc::transport::struc::Channel, feeding it an `std::move()`d already-opened @link ipc::transport::Channel Channel@endlink.  This is called **upgrading** an unstructured `Channel` to a `struc::Channel`.  A key template parameter to `struc::Channel` is a capnp-generated root schema class of the user's choice.  This declares, at compile-time, what data structures (messages) one can transmit via that `struc::Channel` (and an identically-typed counterpart `struc::Channel` in the opposing process).
 
@@ -611,7 +611,7 @@ Further capabilities are outside our scope here; but the main point is: At a min
 > }
 > ~~~
 >
-> Example of trasmitting a SHM-backed native data structure to another process follows.  We transmit a handle through a capnp structured message here, but it can be done using any IPC mechanism whatsoever; even (e.g.) a file.
+> An example of transmitting a SHM-backed native data structure to another process follows.  We transmit a handle through a capnp structured message here, but it can be done using any IPC mechanism whatsoever; even (e.g.) a file.
 >
 > Schema which includes a native-object-in-SHM field:
 > ~~~{.capnp}
@@ -656,7 +656,7 @@ When one gets into this relatively advanced area, there are differences and trad
 
 Safety
 ------
-Flow-IPC focuses on IPC *safety*.  @ref safety_perms page gets into the topic in detail.  Here we'll point out merely one specific mechanism which might be of immediate interest.  It shows that -- while at various lower layers permissions can be specified in fine-grained fashion -- at the top layer, ipc::session, we let you decide one of 3 simple safety approaches matching your setup, and Flow-IPC will take care of the details accordingly.  To wit:
+Flow-IPC focuses on IPC *safety*.  @ref safety_perms page gets into the topic in detail.  Here we'll point out merely one specific mechanism which might be of immediate interest.  It shows that -- while at various lower layers permissions can be specified in a fine-grained fashion -- at the top layer, ipc::session, we let you decide one of 3 simple safety approaches matching your setup, and Flow-IPC will take care of the details accordingly.  To wit:
 
 Refer to the very top of @ref api_overview_sessions_synopsis "Synopsis: Sessions" above.  When defining our simple `Server_app` structure that describes the application responsible for accepting sessions (IPC conversations/contexts), we chose:
 
